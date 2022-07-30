@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
@@ -15,7 +14,7 @@ if settings.DEBUG:
 # API URLS
 urlpatterns += [
     path("api/", include("config.api_router")),
-    path("auth-token/", obtain_auth_token),
+    path("api/auth/", include("rest_framework_social_oauth2.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
         "api/docs/",

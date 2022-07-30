@@ -2,6 +2,8 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+SOCIAL_AUTH_VK_OAUTH2_KEY=8230302
+SOCIAL_AUTH_VK_OAUTH2_SECRET=bbKm5jvS97FBiIW8QL0c
 # Redis
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
