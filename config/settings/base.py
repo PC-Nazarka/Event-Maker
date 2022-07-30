@@ -15,6 +15,8 @@ if READ_DOT_ENV_FILE:
 
 # GENERAL
 # ------------------------------------------------------------------------------
+APP_LABEL = "EventMaker"
+FRONTEND_URL = ""
 DEBUG = env.bool("DJANGO_DEBUG", False)
 TIME_ZONE = "Asia/Krasnoyarsk"
 LANGUAGE_CODE = "en-us"
@@ -56,11 +58,13 @@ THIRD_PARTY_APPS = [
     "oauth2_provider",
     "social_django",
     "rest_framework_social_oauth2",
+    "django_filters",
 ]
 
 LOCAL_APPS = [
     "apps.users",
     "apps.events",
+    "apps.core",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -217,6 +221,8 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
 }
 
 CORS_URLS_REGEX = r"^/api/.*$"

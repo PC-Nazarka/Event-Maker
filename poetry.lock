@@ -527,6 +527,17 @@ python-versions = ">=3.6"
 Django = ">=3.2"
 
 [[package]]
+name = "django-filter"
+version = "22.1"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-model-utils"
 version = "4.2.0"
 description = "Django model mixins and utilities"
@@ -1792,7 +1803,7 @@ prod = ["django-anymail", "gunicorn"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10.5"
-content-hash = "efddfbaf7e79c084ab38449d2fd2397041fc53ded6f27742b95fcbf7024161fa"
+content-hash = "4382dd8af3d419135236bf870ba757ca85744dad511d9973ad6cb81c82141a50"
 
 [metadata.files]
 amqp = [
@@ -1957,6 +1968,7 @@ django-coverage-plugin = [
 django-debug-toolbar = []
 django-environ = []
 django-extensions = []
+django-filter = []
 django-model-utils = [
     {file = "django-model-utils-4.2.0.tar.gz", hash = "sha256:e7a95e102f9c9653427eadab980d5d59e1dea972913b9c9e01ac37f86bba0ddf"},
     {file = "django_model_utils-4.2.0-py3-none-any.whl", hash = "sha256:a768a25c80514e0ad4e4a6f9c02c44498985f36c5dfdea47b5b1e8cf994beba6"},
