@@ -9,27 +9,18 @@ TEMPLATES = {
 
 def send_email(
     action,
-    user,
-    course,
+    event,
 ):
     """Function for send email with html template."""
     context = {
         "app_label": settings.APP_LABEL,
     }
     html = get_template(TEMPLATES[action])
-
-    context["course"] = course.name
-    context["topics"] = (
-        "<ul>"
-        + "".join([f"<li>{topic.title}</li>" for topic in course.topics.all()])
-        + "</ul>"
-    )
-    context["count_students"] = course.students.count()
+    context["event"] = event.name
     html_content = html.render(context)
     msg = EmailMultiAlternatives(
-        subject=user.username,
         from_email=settings.EMAIL_HOST_USER,
-        to=[user.email],
+        to=[user.email for user in event.members.all()],
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send()

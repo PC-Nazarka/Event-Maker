@@ -1,7 +1,7 @@
 import pytest
 from rest_framework import test
 
-from apps.users.tests.factories import UserFactory
+from apps.users.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)

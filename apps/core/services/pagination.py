@@ -15,5 +15,5 @@ class PaginationObject(pagination.PageNumberPagination):
                 "count": self.page.paginator.count,
                 "total_pages": self.page.paginator.num_pages,
                 "results": data,
-            }
+            },
         )

@@ -25,9 +25,13 @@ class Event(BaseModel):
         default=False,
         verbose_name=_("Is online event"),
     )
-    is_open = models.BooleanField(
-        default=True,
-        verbose_name=_("Is open field"),
+    is_private = models.BooleanField(
+        default=False,
+        verbose_name=_("Is open event"),
+    )
+    is_finished = models.BooleanField(
+        default=False,
+        verbose_name=_("Is finished event"),
     )
     owner = models.ForeignKey(
         User,

@@ -9,9 +9,9 @@ class BaseViewSet(viewsets.ModelViewSet):
     pagination_class = PaginationObject
 
 
-class SimpleBaseViewSet(
+class ListCreateUpdateDeleteViewSet(
+    mixins.ListModelMixin,
     mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
@@ -19,14 +19,3 @@ class SimpleBaseViewSet(
     """Base ViewSet for other views without list."""
 
     pagination_class = PaginationObject
-
-
-class CRUBaseViewSet(
-    mixins.CreateModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet,
-):
-    """Base ViewSet for other views without list."""
-
-    pagination_class = None

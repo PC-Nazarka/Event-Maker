@@ -1,11 +1,10 @@
-from rest_framework import serializers
-
-from apps.users.serializers import UserSerializer
+from apps.core.serializers import BaseModelSerializer, serializers
+from apps.users.serializers import User, UserSerializer
 
 from . import models
 
 
-class EventSerializer(serializers.ModelSerializer):
+class EventSerializer(BaseModelSerializer):
     """Serializer for Event model."""
 
     count_members = serializers.SerializerMethodField(
@@ -29,7 +28,38 @@ class EventSerializer(serializers.ModelSerializer):
             "address",
             "datetime_spending",
             "is_online",
-            "is_open",
+            "is_private",
+            "is_finished",
             "owner",
             "count_members",
         )
+
+
+class InviteSerializer(BaseModelSerializer):
+    """Serializer for Invite model."""
+
+    event = serializers.PrimaryKeyRelatedField(
+        queryset=models.Event.objects.all(),
+    )
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+    )
+
+    class Meta:
+        model = models.Invite
+        fields = (
+            "id",
+            "event",
+            "user",
+            "is_accepted",
+            "is_active",
+        )
+
+    def validate_user(self, user: User) -> User:
+        """Method for validate user field."""
+        event = models.Event.objects.get(id=self._request.data["event"])
+        if user in event.members.all():
+            raise serializers.ValidationError(
+                f"User {user.username} is already member.",
+            )
+        return user
