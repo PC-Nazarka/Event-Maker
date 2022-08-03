@@ -1,0 +1,16 @@
+{% extends "email_base.html" %}
+{% load i18n %}
+
+{% block email_body %}
+  {% autoescape off %}
+    {% blocktrans with app_label=app_label event=event %}
+      <p>Hello from {{ app_label }}!</p>
+      <p>
+        You received an invitation to "{{ event }}".
+      </p>
+    {% endblocktrans %}
+    {% blocktrans with app_label=app_label %}
+      <p>Thank you for using {{ app_label }}!</p>
+    {% endblocktrans %}
+  {% endautoescape %}
+{% endblock %}

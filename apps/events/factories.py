@@ -1,6 +1,6 @@
 import factory
 
-from apps.events.models import Event, Invite
+from apps.events import models
 from apps.users.factories import UserFactory
 
 
@@ -17,7 +17,7 @@ class EventFactory(factory.django.DjangoModelFactory):
     owner = factory.SubFactory(UserFactory)
 
     class Meta:
-        model = Event
+        model = models.Event
 
 
 class InviteFactory(factory.django.DjangoModelFactory):
@@ -29,4 +29,4 @@ class InviteFactory(factory.django.DjangoModelFactory):
     is_active = factory.Faker("pybool")
 
     class Meta:
-        model = Invite
+        model = models.Invite

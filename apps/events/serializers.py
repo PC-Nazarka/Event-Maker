@@ -63,3 +63,33 @@ class InviteSerializer(BaseModelSerializer):
                 f"User {user.username} is already member.",
             )
         return user
+
+
+class InviteAnswerSerializer(serializers.Serializer):
+    """Serializer for answer of invite."""
+
+    is_accepted = serializers.BooleanField()
+
+    def validate_is_accepted(self, is_accepted: bool) -> bool:
+        """Method for validate is_accepted field."""
+        self.invite = models.Invite.objects.filter(
+            id=self.context["request"].parser_context["kwargs"]["pk"],
+        ).first()
+        if not self.invite.is_active:
+            raise serializers.ValidationError(
+                "Invite not active",
+            )
+        if self.invite.user in self.invite.event.members.all() and is_accepted:
+            raise serializers.ValidationError(
+                f"User {self.invite.user.username} is already member",
+            )
+        return is_accepted
+
+    def save(self) -> None:
+        """Overriden for change invite."""
+        is_accepted = self.validated_data["is_accepted"]
+        self.invite.is_accepted = is_accepted
+        if is_accepted:
+            self.invite.event.members.add(self.invite.user)
+        self.invite.is_active = False
+        self.invite.save()

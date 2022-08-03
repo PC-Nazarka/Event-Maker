@@ -6,7 +6,7 @@ from pathlib import Path
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-APPS_DIR = ROOT_DIR / "apps"
+APPS_DIR = ROOT_DIR / "event_maker"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -226,6 +226,10 @@ REST_FRAMEWORK = {
 }
 
 CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+]
+DOMAIN = "localhost:8080"
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "event_maker API",

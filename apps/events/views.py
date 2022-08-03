@@ -28,7 +28,7 @@ class EventViewSet(BaseViewSet):
             queryset = queryset.filter(
                 user=self.request.user,
             )
-        else:
+        elif self.action == "list_events_main":
             queryset = queryset.filter(
                 is_private=False,
                 is_finished=False,
@@ -36,7 +36,12 @@ class EventViewSet(BaseViewSet):
         return queryset
 
     @action(methods=("GET",), detail=False, url_path="list-events")
-    def list_events_of_user(self, request, *args, **kwargs):
+    def list_events_user(self, request, *args, **kwargs):
+        """Action for get list of events of user."""
+        return super().list(request, *args, **kwargs)
+
+    @action(methods=("GET",), detail=False, url_path="list-events")
+    def list_events_main(self, request, *args, **kwargs):
         """Action for get list of events of user."""
         return super().list(request, *args, **kwargs)
 
@@ -62,7 +67,7 @@ class EventViewSet(BaseViewSet):
             status=status.HTTP_202_ACCEPTED,
         )
 
-    @action(methods=("POST",), detail=True, url_path="finish")
+    @action(methods=("PATCH",), detail=True, url_path="finish")
     def finish(
         self,
         request,
@@ -119,14 +124,15 @@ class InviteViewSet(ListCreateUpdateDeleteViewSet):
         *args,
         **kwargs,
     ) -> response.Response:
-        """Action for accept or not accept invite"""
-        serializer = serializers.InviteSerializer(request.data)
-        serializer.is_valid(raise_exeption=True)
+        """Action for accept or not accept invite."""
+        serializer = serializers.InviteAnswerSerializer(
+            data=request.data,
+            context={
+                "request": request,
+            },
+        )
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-        event = models.Event.objects.filter(event=serializer.data["event"])
-        if serializer.data["is_accepted"]:
-            event.members.add(request.user)
         return response.Response(
-            data=serializer.data,
             status=status.HTTP_200_OK,
         )
