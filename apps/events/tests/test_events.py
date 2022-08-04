@@ -40,6 +40,8 @@ def test_update_event_by_owner(user, api_client) -> None:
     """Test update event by owner."""
     event = factories.EventFactory.create(
         owner=user,
+        is_private=False,
+        is_finished=False,
     )
     new_name = "New event"
     api_client.force_authenticate(user=user)
@@ -70,7 +72,10 @@ def test_update_event_by_owner(user, api_client) -> None:
 
 def test_update_event_by_member(user, api_client) -> None:
     """Test update event by member."""
-    event = factories.EventFactory.create()
+    event = factories.EventFactory.create(
+        is_private=False,
+        is_finished=False,
+    )
     event.members.add(user)
     new_name = "New event"
     api_client.force_authenticate(user=user)
@@ -91,7 +96,10 @@ def test_update_event_by_member(user, api_client) -> None:
 
 def test_update_event_by_other_user(user, api_client) -> None:
     """Test update event by other user."""
-    event = factories.EventFactory.create()
+    event = factories.EventFactory.create(
+        is_private=False,
+        is_finished=False,
+    )
     new_name = "New event"
     api_client.force_authenticate(user=user)
     response = api_client.put(
@@ -111,7 +119,11 @@ def test_update_event_by_other_user(user, api_client) -> None:
 
 def test_delete_event_by_owner(user, api_client) -> None:
     """Test delete event by owner."""
-    event = factories.EventFactory.create(owner=user)
+    event = factories.EventFactory.create(
+        owner=user,
+        is_private=False,
+        is_finished=False,
+    )
     api_client.force_authenticate(user=user)
     response = api_client.delete(
         reverse_lazy("api:events-detail", kwargs={"pk": event.pk}),
@@ -131,7 +143,10 @@ def test_delete_event_by_owner(user, api_client) -> None:
 
 def test_delete_event_by_member(user, api_client) -> None:
     """Test delete event by member."""
-    event = factories.EventFactory.create()
+    event = factories.EventFactory.create(
+        is_private=False,
+        is_finished=False,
+    )
     event.members.add(user)
     api_client.force_authenticate(user=user)
     response = api_client.delete(
@@ -142,7 +157,10 @@ def test_delete_event_by_member(user, api_client) -> None:
 
 def test_delete_event_by_other_user(user, api_client) -> None:
     """Test delete event by other user."""
-    event = factories.EventFactory.create()
+    event = factories.EventFactory.create(
+        is_private=False,
+        is_finished=False,
+    )
     api_client.force_authenticate(user=user)
     response = api_client.delete(
         reverse_lazy("api:events-detail", kwargs={"pk": event.pk}),

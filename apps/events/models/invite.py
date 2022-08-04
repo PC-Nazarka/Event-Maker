@@ -26,5 +26,5 @@ class Invite(BaseModel):
     )
     is_active = models.BooleanField(
         default=True,
-        verbose_name=_("Active invite of not"),
+        verbose_name=_("Active invite or not"),
     )

@@ -75,6 +75,10 @@ class InviteAnswerSerializer(serializers.Serializer):
         self.invite = models.Invite.objects.filter(
             id=self.context["request"].parser_context["kwargs"]["pk"],
         ).first()
+        if self.invite.event.is_finished:
+            raise serializers.ValidationError(
+                "Event is finished",
+            )
         if not self.invite.is_active:
             raise serializers.ValidationError(
                 "Invite not active",

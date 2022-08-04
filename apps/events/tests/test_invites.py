@@ -77,7 +77,7 @@ def test_update_invite_by_other_user(user, api_client) -> None:
             "is_accepted": is_accepted,
         },
     )
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_delete_invite_by_owner(user, api_client) -> None:
@@ -110,12 +110,14 @@ def test_delete_invite_by_other_user(user, api_client) -> None:
     response = api_client.delete(
         reverse_lazy("api:invites-detail", kwargs={"pk": invite.pk}),
     )
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_accept_invite_true(user, api_client) -> None:
     """Test accept invite True."""
-    event = factories.EventFactory.create()
+    event = factories.EventFactory.create(
+        is_finished=False,
+    )
     invite = factories.InviteFactory.create(
         event=event,
         user=user,
@@ -160,7 +162,9 @@ def test_accept_invite_true(user, api_client) -> None:
 
 def test_accept_invite_false(user, api_client) -> None:
     """Test accept invite False."""
-    event = factories.EventFactory.create()
+    event = factories.EventFactory.create(
+        is_finished=False,
+    )
     invite = factories.InviteFactory.create(
         event=event,
         user=user,
@@ -235,3 +239,30 @@ def test_finish_event_and_not_active_invites(user, api_client) -> None:
     assert not all(
         [invite.is_active for invite in models.Invite.objects.filter(event=event)],
     )
+
+
+def test_finish_event_and_new_invites(user, api_client) -> None:
+    """Test set not active for invites of finish event."""
+    event = factories.EventFactory.create(
+        owner=user,
+        is_finished=True,
+    )
+    api_client.force_authenticate(user=user)
+    response = api_client.patch(
+        reverse_lazy("api:events-finish", kwargs={"pk": event.pk}),
+    )
+    new_user = factories.UserFactory.create()
+    invite = factories.InviteFactory.create(
+        event=event,
+        user=new_user,
+        is_active=True,
+    )
+    api_client.force_authenticate(user=new_user)
+    response = api_client.post(
+        reverse_lazy("api:invites-accept", kwargs={"pk": invite.pk}),
+        data={
+            "is_accepted": True,
+        },
+    )
+    assert str(response.data["is_accepted"][0]) == "Event is finished"
+    assert response.status_code == status.HTTP_400_BAD_REQUEST

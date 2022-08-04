@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from apps.events.views import EventViewSet, InviteViewSet
+from apps.events.viewsets import EventViewSet, InviteViewSet
 from apps.users.views import UserViewSet
 
 app_name = "api"
