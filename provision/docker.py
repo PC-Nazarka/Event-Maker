@@ -1,59 +1,57 @@
 from invoke import task
 
-from . import common
+DEVELOPMENT_CONTAINER = "dev"
+PRODUCTION_CONTAINER = "prod"
 
-START_COMMAND = "docker-compose -f local.yml"
+CONTAINERS = {
+    DEVELOPMENT_CONTAINER: "docker-compose",
+    PRODUCTION_CONTAINER: "docker-compose -f docker-compose.prod.yml",
+}
 
 
 @task
-def build(context):
+def build(context, compose="dev"):
     """Build project."""
-    return context.run(f"{START_COMMAND} build")
+    context.run(f"{CONTAINERS[compose]} build")
 
 
 @task
-def run(context):
-    """Run postgres, redis, django."""
-    return context.run(f"{START_COMMAND} up")
+def run_background(context, compose="dev"):
+    """Build project."""
+    context.run(f"{CONTAINERS[compose]} up -d")
 
 
 @task
-def run_container(context, command=""):
-    """Base template for commands with django container."""
-    return context.run(f"{START_COMMAND} run --rm django {command}")
+def run(context, compose="dev"):
+    """Run postgres, redis, telegram app."""
+    context.run(f"{CONTAINERS[compose]} up")
 
 
 @task
-def delcont(context):
-    """Delete all docker containers."""
-    return context.run("docker rm -f $(docker ps -a -q)")
+def run_build(context, compose="dev"):
+    """Run and build app."""
+    context.run(f"{CONTAINERS[compose]} up --build")
 
 
 @task
-def clear(context):
-    """Stop and remove all containers defined in docker-compose.
-
-    Also remove images.
-
-    """
-    common.success("Clearing docker-compose")
-    context.run(f"{START_COMMAND} rm -f")
-    context.run(f"{START_COMMAND} down -v --rmi all --remove-orphans")
+def clean_volumes(context, compose="dev"):
+    """Clean volumes."""
+    context.run(f"{CONTAINERS[compose]} down -v")
 
 
-def docker_compose_exec(context, service, command):
-    """Run ``exec`` using docker-compose.
+@task
+def stop(context, compose="dev"):
+    """Stop and remove all containers defined in docker-compose."""
+    context.run(f"{CONTAINERS[compose]} stop")
 
-    docker-compose exec <service> <command>
-    Run commands in already running container.
 
-    Used function so lately it can be extended to use different docker-compose
-    files.
+@task
+def clear(context, compose="dev"):
+    """Stop and remove all containers defined in docker-compose."""
+    stop(context, compose)
+    context.run("docker system prune -f")
 
-    Args:
-        context: Invoke context
-        service: Name of service to run command in
-        command: Command to run in service container
 
-    """
-    return context.run(f"{START_COMMAND} exec {service} {command}")
+def docker_compose_run(context, service, command, compose="dev"):
+    """Run ``run`` using docker-compose."""
+    return context.run(f"{CONTAINERS[compose]} run --rm {service} {command}")

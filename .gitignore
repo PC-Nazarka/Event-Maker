@@ -275,5 +275,3 @@ event_maker/media/
 .pytest_cache/
 .ipython/
 .env
-.envs/*
-!.envs/.local

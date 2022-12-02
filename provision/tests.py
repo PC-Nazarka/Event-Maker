@@ -4,7 +4,7 @@ from . import common, docker
 
 
 @task
-def pytest(context):
+def pytest(context, service="django", params="", compose="dev"):
     """Run django tests."""
     common.success("Tests running")
-    docker.run_container(context, "pytest")
+    docker.docker_compose_run(context, service, f"pytest {params}", compose)

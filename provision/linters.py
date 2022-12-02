@@ -6,31 +6,46 @@ DEFAULT_FOLDERS = "."
 
 
 @task
-def isort(context, path=DEFAULT_FOLDERS, params=""):
+def isort(
+    context,
+    path=DEFAULT_FOLDERS,
+    service="django",
+    params="--settings-file=./setup.cfg",
+    compose="dev",
+):
     """Command to fix imports formatting."""
     common.success("Linters: ISort running")
-    docker.run_container(context, f"isort {path} {params}")
+    docker.docker_compose_run(
+        context,
+        service,
+        f"isort {path} {params}",
+        compose,
+    )
 
 
 @task
-def black(context, path=DEFAULT_FOLDERS):
-    """Run `black` linter."""
-    common.success("Linters: Black running")
-    docker.run_container(context, f"black {path}")
-
-
-@task
-def flake8(context, path=DEFAULT_FOLDERS):
+def flake8(
+    context,
+    path=DEFAULT_FOLDERS,
+    service="django",
+    params="--config=./setup.cfg",
+    compose="dev",
+):
     """Run `flake8` linter."""
     common.success("Linters: Flake8 running")
-    docker.run_container(context, f"flake8 {path}")
+    docker.docker_compose_run(
+        context,
+        service,
+        f"flake8 {path} {params}",
+        compose,
+    )
 
 
 @task
 def all(context, path=DEFAULT_FOLDERS):
     """Run all linters."""
     common.success("Linters: Running all linters")
-    linters = (isort, black, flake8)
+    linters = (isort, flake8)
     failed = []
     for linter in linters:
         try:
