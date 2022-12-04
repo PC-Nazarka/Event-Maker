@@ -14,7 +14,7 @@ FRONTEND_URL = ""
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
-    "vqBuvYRdQrAHdKY3bMyvV8wvuy6QaczedCQrmb58YVR3bjY8avnxFXNumWuqdb6s"
+    "vqBuvYRdQrAHdKY3bMyvV8wvuy6QaczedCQrmb58YVR3bjY8avnxFXNumWuqdb6s",
 )
 ALLOWED_HOSTS = ["*"]
 TIME_ZONE = "Asia/Krasnoyarsk"

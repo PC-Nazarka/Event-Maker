@@ -7,11 +7,11 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        args: ["--settings-file=setup.cfg"]
+        args: ["--settings-file=./server/setup.cfg"]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1
     hooks:
       - id: flake8
-        args: ["--config=setup.cfg"]
+        args: ["--config=./server/setup.cfg"]
         additional_dependencies: [flake8-isort]
