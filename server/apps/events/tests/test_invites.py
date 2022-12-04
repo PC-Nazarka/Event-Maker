@@ -237,7 +237,10 @@ def test_finish_event_and_not_active_invites(user, api_client) -> None:
     )
     assert response.status_code == status.HTTP_200_OK
     assert not all(
-        [invite.is_active for invite in models.Invite.objects.filter(event=event)],
+        [
+            invite.is_active
+            for invite in models.Invite.objects.filter(event=event)
+        ],
     )
 
 

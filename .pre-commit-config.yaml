@@ -1,4 +1,4 @@
-exclude: "^docs/|/migrations/"
+exclude: "^docs/|/migrations/|tasks.py"
 default_stages: [commit]
 
 repos:
@@ -10,8 +10,7 @@ repos:
         args: ["--settings-file=./server/setup.cfg"]
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
+    rev: 6.0.0
     hooks:
       - id: flake8
         args: ["--config=./server/setup.cfg"]
-        additional_dependencies: [flake8-isort]

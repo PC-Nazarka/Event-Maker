@@ -55,7 +55,9 @@ class ActionHandlerMixin:
     async def _get_required_params(method: Awaitable) -> set[str]:
         annotations: dict[str, Any] = method.__annotations__
         params = {
-            key for key in annotations.keys() if "Optional" not in str(annotations[key])
+            key
+            for key in annotations.keys()
+            if "Optional" not in str(annotations[key])
         }
         params.discard("return")
         return params
@@ -64,7 +66,9 @@ class ActionHandlerMixin:
     async def _get_optional_params(method: Awaitable) -> set[str]:
         annotations: dict[str, Any] = method.__annotations__
         params = {
-            key for key in annotations.keys() if "Optional" in str(annotations[key])
+            key
+            for key in annotations.keys()
+            if "Optional" in str(annotations[key])
         }
         params.discard("return")
         return params

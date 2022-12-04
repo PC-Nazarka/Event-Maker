@@ -1,6 +1,6 @@
 import os
 
-from .main import TIME_ZONE, USE_TZ
+from .settings import TIME_ZONE, USE_TZ
 
 if USE_TZ:
     CELERY_TIMEZONE = TIME_ZONE

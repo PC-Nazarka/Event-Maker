@@ -28,7 +28,10 @@ class BaseConsumer(
             await self.handle_exception(exception)
 
     async def response_to_user(self, event: str, body: dict) -> None:
-        await self.channel_layer.send(self.channel_name, {"type": event, "body": body})
+        await self.channel_layer.send(
+            self.channel_name,
+            {"type": event, "body": body}
+        )
 
     async def response_to_group(self, event: str, body: dict) -> None:
         if self.group_name:
@@ -55,7 +58,9 @@ class BaseConsumer(
     @staticmethod
     def _clean_rest_framework_validation_error(message) -> str:
         return (
-            message[0] if isinstance(message, list) and len(message) == 1 else message
+            message[0]
+            if isinstance(message, list) and len(message) == 1
+            else message
         )
 
     async def handle_exception(self, exception) -> None:

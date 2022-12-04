@@ -1,5 +1,3 @@
-import os
-
 from invoke import task
 
 from . import common, docker
@@ -8,7 +6,12 @@ from . import common, docker
 @task
 def manage(context, service="django", command="", compose="dev"):
     """Base template for commands with python manage.py."""
-    docker.docker_compose_run(context, service, f"python manage.py {command}", compose)
+    docker.docker_compose_run(
+        context,
+        service,
+        f"python manage.py {command}",
+        compose,
+    )
 
 
 @task
