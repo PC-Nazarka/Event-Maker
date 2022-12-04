@@ -1,4 +1,5 @@
-import os 
+import os
+
 from invoke import task
 
 from . import common, docker
