@@ -1,27 +1,22 @@
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+
+from apps.core.views import RetrieveUpdateViewSet
 
 from .serializers import UserSerializer
 
 
-class UserViewSet(
-    RetrieveModelMixin,
-    ListModelMixin,
-    UpdateModelMixin,
-    GenericViewSet,
-):
+class UserViewSet(RetrieveUpdateViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "username"
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         return self.queryset.filter(id=self.request.user.id)
 
-    @action(detail=False)
+    @action(methods=("GET",), detail=False)
     def me(self, request):
         return Response(
             data=(

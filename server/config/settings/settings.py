@@ -108,16 +108,6 @@ TEMPLATES = [
     },
 ]
 
-# SECURITY
-# ------------------------------------------------------------------------------
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True
-X_FRAME_OPTIONS = "DENY"
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 60
-
 # ADMIN
 # ------------------------------------------------------------------------------
 ADMIN_URL = os.getenv(
@@ -167,9 +157,22 @@ LOGGING = {
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 if DEBUG:
-    INSTALLED_APPS += ["debug_toolbar"]
-    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+    import socket
+
+    from .installed_apps import INSTALLED_APPS
+
+    def show_toolbar(request):
+        from django.conf import settings
+        return settings.DEBUG
+
     DEBUG_TOOLBAR_CONFIG = {
-        "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
-        "SHOW_TEMPLATE_CONTEXT": True,
+        "SHOW_TEMPLATE_CONTEXT": show_toolbar,
     }
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+    INSTALLED_APPS += ['debug_toolbar']
+    INTERNAL_IPS = (
+        "0.0.0.0",
+        "127.0.0.1",
+    )
+    ip = socket.gethostbyname(socket.gethostname())
+    INTERNAL_IPS += (ip[:-1] + "1",)

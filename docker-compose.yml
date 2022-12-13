@@ -8,8 +8,8 @@ services:
     container_name: django
     restart: always
     build:
-      context: ./
-      dockerfile: ./server/Dockerfile
+      context: ./server
+      dockerfile: ./Dockerfile
       args:
         MODE: "--with dev"
     depends_on:

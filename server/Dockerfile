@@ -10,7 +10,7 @@ RUN mkdir ${APP_HOME} && \
     apt-get update && \
     apt-get install --no-install-recommends -y libpq-dev build-essential
 
-COPY ./server ${APP_HOME}
+COPY . ${APP_HOME}
 
 WORKDIR ${APP_HOME}
 
