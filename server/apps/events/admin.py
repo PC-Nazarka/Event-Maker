@@ -9,7 +9,7 @@ class EventAdmin(admin.ModelAdmin):
 
     search_fields = (
         "name",
-        "desctiption",
+        "description",
     )
     list_display = (
         "id",

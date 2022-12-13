@@ -17,4 +17,6 @@ class InviteFilter(filters.FilterSet):
 
     class Meta:
         model = models.Invite
-        fields = ("is_accepted",)
+        fields = (
+            "is_accepted",
+        )

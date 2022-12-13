@@ -57,7 +57,9 @@ class InviteSerializer(BaseModelSerializer):
 
     def validate_user(self, user: User) -> User:
         """Method for validate user field."""
-        event = models.Event.objects.get(id=self._request.data["event"])
+        event = models.Event.objects.prefetch_related("members").get(
+            id=self._request.data["event"],
+        )
         if user in event.members.all():
             raise serializers.ValidationError(
                 f"User {user.username} is already member.",
@@ -72,7 +74,12 @@ class InviteAnswerSerializer(serializers.Serializer):
 
     def validate_is_accepted(self, is_accepted: bool) -> bool:
         """Method for validate is_accepted field."""
-        self.invite = models.Invite.objects.filter(
+        self.invite = models.Invite.objects.select_related(
+            "event",
+            "user",
+        ).prefetch_related(
+            "event__members",
+        ).filter(
             id=self.context["request"].parser_context["kwargs"]["pk"],
         ).first()
         if self.invite.event.is_finished:

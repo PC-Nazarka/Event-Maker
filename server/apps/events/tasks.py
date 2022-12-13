@@ -18,7 +18,9 @@ def check_event_time() -> None:
 @app.task
 def send_email_invite(invite_id: int) -> None:
     """Send email about invite."""
-    invite = models.Invite.objects.filter(
+    invite = models.Invite.objects.select_related(
+        "event", "user",
+    ).prefetch_related("event__members").filter(
         id=invite_id,
     ).first()
     send_email("invite", invite.event, invite)

@@ -20,22 +20,16 @@ class InviteViewSet(BaseViewSet):
 
     def get_queryset(self):
         """Overriden for custom get queryset."""
-        return models.Invite.objects.filter(user=self.request.user)
+        return models.Invite.objects.select_related("user").filter(
+            user=self.request.user,
+        )
 
     @action(methods=("POST",), detail=True, url_path="accept")
-    def accept(
-        self,
-        request,
-        pk: int = None,
-        *args,
-        **kwargs,
-    ) -> response.Response:
+    def accept(self, request, pk: int = None) -> response.Response:
         """Action for accept or not accept invite."""
         serializer = serializers.InviteAnswerSerializer(
             data=request.data,
-            context={
-                "request": request,
-            },
+            context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()

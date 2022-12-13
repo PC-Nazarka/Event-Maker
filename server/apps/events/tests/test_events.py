@@ -220,10 +220,10 @@ def test_consists_in_event(user, api_client) -> None:
     response = api_client.post(
         reverse_lazy("api:events-consist-in-event", kwargs={"pk": event.pk}),
     )
-    assert response.status_code == status.HTTP_202_ACCEPTED
+    assert response.status_code == status.HTTP_200_OK
     assert user in event.members.all()
     response = api_client.post(
         reverse_lazy("api:events-consist-in-event", kwargs={"pk": event.pk}),
     )
-    assert response.status_code == status.HTTP_202_ACCEPTED
+    assert response.status_code == status.HTTP_200_OK
     assert user not in event.members.all()

@@ -18,6 +18,7 @@ class Invite(BaseModel):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name="invites",
         verbose_name=_("User of invite"),
     )
     is_accepted = models.BooleanField(

@@ -20,12 +20,10 @@ class EventOwner(permissions.BasePermission):
 
     def has_permission(self, request, view) -> bool:
         return (
-            request.user
-            == models.Event.objects.filter(
+            models.Event.objects.select_related("owner").filter(
                 id=request.parser_context["kwargs"]["pk"],
-            )
-            .first()
-            .owner
+            ).first().owner ==
+            request.user
         )
 
     def has_object_permission(self, request, view, obj) -> bool:
@@ -39,12 +37,10 @@ class InviteOwner(permissions.BasePermission):
         if request.method == "POST":
             if view.action == "accept":
                 return (
-                    models.Invite.objects.filter(
+                    models.Invite.objects.select_related("user").filter(
                         id=request.parser_context["kwargs"]["pk"],
-                    )
-                    .first()
-                    .user
-                    == request.user
+                    ).first().user ==
+                    request.user
                 )
             return request.user.events_owner.filter(
                 is_finished=False,
