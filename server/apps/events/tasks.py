@@ -9,18 +9,26 @@ from . import models
 @app.task
 def check_event_time() -> None:
     """Check time of events and send email this remember."""
-    for event in models.Event.objects.filter(is_finished=False):
-        minutes = (event.datetime_spending - datetime.now(timezone.utc)) // 60
+    events = models.Event.objects.prefetch_related(
+        "members"
+    ).filter(is_finished=False).values(
+        "name",
+        "datetime_spending",
+        "members__email",
+    )
+    for event in events:
+        minutes = (
+            event["datetime_spending"] -
+            datetime.now(timezone.utc)
+        ) // 60
         if minutes in range(0, 6):
-            send_email("soon", event)
+            send_email("soon", event["name"], [event["members__email"]])
 
 
 @app.task
 def send_email_invite(invite_id: int) -> None:
     """Send email about invite."""
-    invite = models.Invite.objects.select_related(
+    data = models.Invite.objects.select_related(
         "event", "user",
-    ).prefetch_related("event__members").filter(
-        id=invite_id,
-    ).first()
-    send_email("invite", invite.event, invite)
+    ).filter(id=invite_id,).values("event__name", "user__email").first()
+    send_email("invite", data["event__name"], [data["user__email"]])

@@ -31,7 +31,6 @@ def migrate(context, app_name=""):
 @task
 def createsuperuser(
     context,
-    compose,
     username="admin",
     password="admin",
     email="admin@admin.com",
@@ -44,7 +43,6 @@ def createsuperuser(
             f"--password {password} --noinput "
             f"--email {email}"
         ),
-        compose=compose,
     )
 
 

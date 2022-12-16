@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.db.models import Prefetch
 from rest_framework import response, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -42,7 +44,12 @@ class EventViewSet(BaseViewSet):
     @action(methods=("POST",), detail=True, url_path="consist")
     def consist_in_event(self, request, pk: int = None) -> response.Response:
         """Action for enter/exit in event."""
-        event = models.Event.objects.prefetch_related("members").get(id=pk)
+        event = models.Event.objects.prefetch_related(
+            Prefetch(
+                "members",
+                queryset=User.objects.filter(id=request.user.id),
+            )
+        ).get(id=pk)
         if request.user not in event.members.all():
             event.members.add(request.user)
         else:

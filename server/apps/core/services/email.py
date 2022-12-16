@@ -8,24 +8,16 @@ TEMPLATES = {
 }
 
 
-def send_email(
-    action,
-    event,
-    invite=None,
-):
+def send_email(action, event_name, emails_to):
     """Function for send email with html template."""
     context = {
         "app_label": settings.APP_LABEL,
+        "event": event_name,
     }
     html = get_template(TEMPLATES[action])
-    context["event"] = event.name
-    emails_to = [user.email for user in event.members.all()]
-    if invite is not None:
-        emails_to = [invite.user.email]
-    html_content = html.render(context)
     msg = EmailMultiAlternatives(
         from_email=settings.EMAIL_HOST_USER,
         to=emails_to,
     )
-    msg.attach_alternative(html_content, "text/html")
+    msg.attach_alternative(html.render(context), "text/html")
     msg.send()

@@ -29,6 +29,7 @@ dj-database-url = "1.0.0"
 channels = "3.0.5"
 channels-redis = "3.4.1"
 drf-yasg = "1.21.4"
+djangorestframework-simplejwt = "^4.8.0"
 
 [tool.poetry.group.dev.dependencies]
 django-stubs = "1.13.0"

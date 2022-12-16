@@ -1,3 +1,5 @@
+from django.db.models import Prefetch
+
 from apps.core.serializers import BaseModelSerializer, serializers
 from apps.users.serializers import User, UserSerializer
 
@@ -57,7 +59,9 @@ class InviteSerializer(BaseModelSerializer):
 
     def validate_user(self, user: User) -> User:
         """Method for validate user field."""
-        event = models.Event.objects.prefetch_related("members").get(
+        event = models.Event.objects.prefetch_related(
+            Prefetch("members", queryset=User.objects.filter(id=user.id))
+        ).get(
             id=self._request.data["event"],
         )
         if user in event.members.all():
