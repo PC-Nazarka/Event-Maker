@@ -1,3 +1,4 @@
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -10,10 +11,10 @@ class Event(BaseModel):
 
     name = models.CharField(
         max_length=128,
-        verbose_name=_("Name of model"),
+        verbose_name=_("Name of event"),
     )
     description = models.TextField(
-        verbose_name=_("Description of model"),
+        verbose_name=_("Description of event"),
     )
     address = models.TextField(
         verbose_name=_("Address/link of event"),
@@ -27,7 +28,7 @@ class Event(BaseModel):
     )
     is_private = models.BooleanField(
         default=False,
-        verbose_name=_("Is open event"),
+        verbose_name=_("Is private event"),
     )
     is_finished = models.BooleanField(
         default=False,

@@ -30,5 +30,5 @@ def send_email_invite(invite_id: int) -> None:
     """Send email about invite."""
     data = models.Invite.objects.select_related(
         "event", "user",
-    ).filter(id=invite_id,).values("event__name", "user__email").first()
+    ).filter(id=invite_id).values("event__name", "user__email").first()
     send_email("invite", data["event__name"], [data["user__email"]])

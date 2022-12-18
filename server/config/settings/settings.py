@@ -25,7 +25,7 @@ USE_L10N = True
 USE_TZ = True
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
-ASGI_APPLICATION = 'config.routing.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -42,6 +42,15 @@ CACHES = {
             "IGNORE_EXCEPTIONS": True,
         },
     }
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379)],
+        },
+    },
 }
 
 # AUTHENTICATION

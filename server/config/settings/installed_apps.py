@@ -4,12 +4,13 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.sites",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
     "django.contrib.admin",
     "django.forms",
 ]
 
 THIRD_PARTY_APPS = [
+    'daphne',
+    "django.contrib.staticfiles",
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
@@ -22,6 +23,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "apps.chat.apps.ChatConfig",
     "apps.core.apps.CoreConfig",
     "apps.events.apps.EventsConfig",
     "apps.users.apps.UsersConfig",

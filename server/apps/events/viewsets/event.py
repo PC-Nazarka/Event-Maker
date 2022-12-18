@@ -50,15 +50,16 @@ class EventViewSet(BaseViewSet):
                 queryset=User.objects.filter(id=request.user.id),
             )
         ).get(id=pk)
+        if event.is_private:
+            return response.Response(
+                data={"message": "You may not enter in event"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         if request.user not in event.members.all():
             event.members.add(request.user)
         else:
             event.members.remove(request.user)
         return response.Response(
-            data=serializers.UserSerializer(
-                event.members.all(),
-                many=True,
-            ).data,
             status=status.HTTP_200_OK,
         )
 

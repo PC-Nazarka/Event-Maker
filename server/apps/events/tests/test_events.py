@@ -209,7 +209,7 @@ def test_finish_event_by_other_user(user, api_client) -> None:
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
-def test_consists_in_event(user, api_client) -> None:
+def test_consists_in_public_event(user, api_client) -> None:
     """Test consist in event."""
     event = factories.EventFactory.create(
         is_private=False,
@@ -226,4 +226,19 @@ def test_consists_in_event(user, api_client) -> None:
         reverse_lazy("api:events-consist-in-event", kwargs={"pk": event.pk}),
     )
     assert response.status_code == status.HTTP_200_OK
+    assert user not in event.members.all()
+
+
+def test_consists_in_private_event(user, api_client) -> None:
+    """Test consist in private event."""
+    event = factories.EventFactory.create(
+        is_private=True,
+        is_finished=False,
+    )
+    api_client.force_authenticate(user=user)
+    assert user not in event.members.all()
+    response = api_client.post(
+        reverse_lazy("api:events-consist-in-event", kwargs={"pk": event.pk}),
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
     assert user not in event.members.all()
