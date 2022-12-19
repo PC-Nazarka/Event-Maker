@@ -9,7 +9,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'daphne',
+    "daphne",
     "django.contrib.staticfiles",
     "django_celery_beat",
     "rest_framework",

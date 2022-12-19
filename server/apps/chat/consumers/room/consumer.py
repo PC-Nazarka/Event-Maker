@@ -17,6 +17,9 @@ class ChatConsumer(
     ACTION_MAP = {
         Actions.USER_LIST: EventActionsMixin.user_list,
         Actions.MESSAGES_LIST: EventActionsMixin.message_list,
+        Actions.SEND_MESSAGES: EventActionsMixin.send_message,
+        Actions.EDIT_MESSAGE: EventActionsMixin.edit_message,
+        Actions.REMOVE_MESSAGE: EventActionsMixin.remove_message,
     }
 
     async def connect(self):
