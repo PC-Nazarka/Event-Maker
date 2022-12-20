@@ -25,7 +25,7 @@ USE_L10N = True
 USE_TZ = True
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
-ASGI_APPLICATION = 'config.asgi.application'
+ASGI_APPLICATION = 'config.routing.application'
 
 # DATABASES
 # ------------------------------------------------------------------------------

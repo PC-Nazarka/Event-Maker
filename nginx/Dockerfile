@@ -1,18 +1,17 @@
 FROM python:3.10.5-slim-bullseye as server
 
-ARG APP_HOME=/server
+ARG APP_HOME=/server/
 
-RUN mkdir ${APP_HOME} && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install --no-install-recommends -y libpq-dev build-essential
-
-WORKDIR ${APP_HOME}
 
 COPY ./server ${APP_HOME}
 
+WORKDIR ${APP_HOME}
+
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
-    poetry install ${MODE} --no-interaction --no-ansi
+    poetry install --no-interaction --no-ansi
 
 RUN python ./manage.py collectstatic --noinput
 
