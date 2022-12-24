@@ -16,7 +16,6 @@ class EventActionsMixin:
         await self.response_to_user(Events.EVENT_MESSAGES_RETRIEVE, body)
 
     async def send_message(self, body: dict) -> None:
-        print(body)
         data = {
             "message": body["message"],
             "event": await EventQueries.get_event_by_id(self.event_id),
