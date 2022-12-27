@@ -45,3 +45,10 @@ class Event(BaseModel):
         related_name="events_member",
         verbose_name=_("Members of event"),
     )
+
+    class Meta:
+        verbose_name = "Event"
+        verbose_name_plural = "Events"
+
+    def __str__(self) -> str:
+        return f"Event {self.name}"

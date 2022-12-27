@@ -29,3 +29,10 @@ class Invite(BaseModel):
         default=True,
         verbose_name=_("Active invite or not"),
     )
+
+    class Meta:
+        verbose_name = "Invite"
+        verbose_name_plural = "Invites"
+
+    def __str__(self) -> str:
+        return f"Invite {self.event} and {self.user}"

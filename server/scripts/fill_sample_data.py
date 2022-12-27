@@ -12,5 +12,6 @@ def run():
     for event, user in zip(events, users):
         for _ in range(COUNT_MESSAGES):
             MessageFactory.create(event=event, user=user)
-        InviteFactory.create(event=event, user=user)
-        event.members.add(user)
+        for invited in users:
+            InviteFactory.create(event=event, user=invited)
+            event.members.add(invited)

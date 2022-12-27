@@ -26,3 +26,10 @@ class Message(models.Model):
         auto_now_add=True,
         verbose_name=_("Datetime created message"),
     )
+
+    class Meta:
+        verbose_name = "Message"
+        verbose_name_plural = "Messages"
+
+    def __str__(self) -> str:
+        return f"Message {self.message} by {self.user}"
