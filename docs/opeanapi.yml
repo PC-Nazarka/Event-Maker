@@ -1,7 +1,7 @@
 openapi: 3.0.2
 
 info:
-  title: my_project
+  title: EventMaker
   version: 0.1.0
 
 tags:
@@ -87,8 +87,8 @@ paths:
           $ref: "#/components/responses/User200"
         "401":
           description: "Unauthorized"
-    
-  "/api/invites/":    
+
+  "/api/invites/":
     post:
       tags:
         - invites
@@ -129,7 +129,6 @@ paths:
         "403":
           description: "Forbidden"
 
-
   "/api/invites/{invite_id}/":
     get:
       tags:
@@ -153,7 +152,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-    
+
     patch:
       tags:
         - invites
@@ -178,7 +177,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-    
+
     delete:
       tags:
         - invites
@@ -201,7 +200,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-    
+
   "/api/invites/{invite_id}/accept":
     get:
       tags:
@@ -224,7 +223,7 @@ paths:
         "403":
           description: "Forbidden"
 
-  "/api/events/":    
+  "/api/events/":
     post:
       tags:
         - events
@@ -325,7 +324,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-    
+
     patch:
       tags:
         - events
@@ -350,7 +349,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-    
+
     delete:
       tags:
         - events
@@ -373,7 +372,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-    
+
   "/api/events/list-events":
     get:
       tags:
@@ -389,7 +388,7 @@ paths:
           description: "Unauthorized"
         "403":
           description: "Forbidden"
-  
+
   "/api/events/{event_id}/consist":
     post:
       tags:
@@ -414,7 +413,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-  
+
   "/api/events/{event_id}/finish":
     patch:
       tags:
@@ -460,7 +459,103 @@ components:
         username:
           type: string
 
+    InviteCreateBase:
+      type: object
+      properties:
+        event:
+          type: number
+        user:
+          type: number
+        is_accepted:
+          type: boolean
+        is_active:
+          type: boolean
+
+    InviteBase:
+      type: object
+      properties:
+        id:
+          type: number
+        event:
+          type: number
+        user:
+          type: number
+        is_accepted:
+          type: boolean
+        is_active:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+
+    EventCreateBase:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        datetime_spending:
+          type: string
+          format: date-time
+        is_online:
+          type: boolean
+        is_private:
+          type: boolean
+        is_finished:
+          type: boolean
+
+    EventBase:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        datetime_spending:
+          type: string
+          format: date-time
+        owner:
+          $ref: "#/components/schemas/UserBase"
+        is_online:
+          type: boolean
+        is_private:
+          type: boolean
+        is_finished:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        count_members:
+          type: number
+
   requestBodies:
+    InviteCreateBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InviteCreateBase"
+      required: true
+
+    EventCreateBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EventCreateBase"
+      required: true
+
     TokenPairRequestBody:
       content:
         application/json:
@@ -499,6 +594,58 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/UserBase"
+
+    InviteCreate201:
+      description: "Invite info"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InviteBase"
+
+    InviteCreate400:
+      description: "Failed invite create"
+
+    InviteList200:
+      description: "Invite list"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/InviteBase"
+
+    Invite200:
+      description: "Invite info"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InviteBase"
+
+    EventCreate201:
+      description: "Event info"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EventBase"
+
+    EventCreate400:
+      description: "Failed event create"
+
+    EventList200:
+      description: "Event list"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/EventBase"
+
+    Event200:
+      description: "Event info"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EventBase"
 
     TokenObtain200:
       description: "Success"

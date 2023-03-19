@@ -8,7 +8,7 @@ class EventActionsMixin:
     async def user_list(self) -> None:
         members = await EventQueries.get_members_list(self.event_id)
         body = {"members": await EventService.get_members_list(members)}
-        await self.response_to_user(Events.EVENT_USERS_RETRIEVE, body)
+        await self.response_to_group(Events.EVENT_USERS_RETRIEVE, body)
 
     async def message_list(self) -> None:
         messages = await EventQueries.get_messages_list(self.event_id)
