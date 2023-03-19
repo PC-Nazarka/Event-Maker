@@ -1,0 +1,554 @@
+openapi: 3.0.2
+
+info:
+  title: my_project
+  version: 0.1.0
+
+tags:
+  - name: auth
+    description: "Auth namespace"
+  - name: users
+    description: "Users namespace"
+  - name: invites
+    description: "Invite namespace"
+  - name: events
+    description: "Event namespace"
+
+paths:
+  "/api/token/":
+    post:
+      tags:
+        - auth
+        - users
+      summary: "Login user"
+      requestBody:
+        $ref: "#/components/requestBodies/TokenPairRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/TokenObtain200"
+        "400":
+          $ref: "#/components/responses/TokenObtain400"
+
+  "/api/token/refresh/":
+    post:
+      tags:
+        - auth
+        - users
+      summary: "Refresh token"
+      requestBody:
+        $ref: "#/components/requestBodies/TokenRefreshRequestBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/TokenRefresh200"
+        "400":
+          $ref: "#/components/responses/TokenRefresh400"
+
+  "/api/users/me/":
+    get:
+      tags:
+        - users
+      summary: "Get info about user from request"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/User200"
+        "401":
+          description: "Unauthorized"
+
+  "/api/users/":
+    get:
+      tags:
+        - users
+      summary: "Get users list"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/UserList200"
+        "401":
+          description: "Unauthorized"
+
+  "/api/users/{user_id}/":
+    get:
+      tags:
+        - users
+      summary: "Get user info"
+      parameters:
+        - name: user_id
+          in: path
+          schema:
+            type: number
+          required: true
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/User200"
+        "401":
+          description: "Unauthorized"
+    
+  "/api/invites/":    
+    post:
+      tags:
+        - invites
+      summary: "Create invite"
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/InviteCreateBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/InviteCreate201"
+        "400":
+          $ref: "#/components/responses/InviteCreate400"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+
+    get:
+      tags:
+        - invites
+      summary: "Get invites list"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: is_accepted
+          schema:
+            type: boolean
+            nullable: true
+          description: "Принятые приглашения"
+          required: false
+      responses:
+        "200":
+          $ref: "#/components/responses/InviteList200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+
+
+  "/api/invites/{invite_id}/":
+    get:
+      tags:
+        - invites
+      summary: "Get invite item"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: invite_id
+          in: path
+          schema:
+            type: number
+          description: "Id приглашения"
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/Invite200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    
+    patch:
+      tags:
+        - invites
+      summary: "Patch invite"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: invite_id
+          in: path
+          schema:
+            type: number
+          description: "Id приглашения"
+          required: true
+      requestBody:
+        $ref: "#/components/requestBodies/InviteCreateBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/Invite200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    
+    delete:
+      tags:
+        - invites
+      summary: "Delete invite"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: invite_id
+          in: path
+          schema:
+            type: number
+          description: "Id приглашения"
+          required: true
+      responses:
+        "204":
+          description: "No Content"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    
+  "/api/invites/{invite_id}/accept":
+    get:
+      tags:
+        - invites
+      summary: "Accept / not accept invite"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: invite_id
+          in: path
+          schema:
+            type: number
+          description: "Id приглашения"
+          required: true
+      responses:
+        "200":
+          description: "Ok"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+
+  "/api/events/":    
+    post:
+      tags:
+        - events
+      summary: "Create event"
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: "#/components/requestBodies/EventCreateBody"
+      responses:
+        "201":
+          $ref: "#/components/responses/EventCreate201"
+        "400":
+          $ref: "#/components/responses/EventCreate400"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+
+    get:
+      tags:
+        - events
+      summary: "Get events list"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+            nullable: true
+          description: "Название мероприятия"
+          required: false
+        - in: query
+          name: description
+          schema:
+            type: string
+            nullable: true
+          description: "Описание мероприятия"
+          required: false
+        - in: query
+          name: address
+          schema:
+            type: string
+            nullable: true
+          description: "Адрес мероприятия"
+          required: false
+        - in: query
+          name: start_date
+          schema:
+            type: string
+            format: date-time
+            nullable: true
+          description: "Начало время проведения"
+          required: false
+        - in: query
+          name: end_date
+          schema:
+            type: string
+            format: date-time
+            nullable: true
+          description: "Конец времени проведения"
+          required: false
+        - in: query
+          name: is_online
+          schema:
+            type: boolean
+            nullable: true
+          description: "Способ проведения"
+          required: false
+      responses:
+        "200":
+          $ref: "#/components/responses/EventList200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+
+  "/api/events/{event_id}/":
+    get:
+      tags:
+        - events
+      summary: "Get event item"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: number
+          description: "Id мероприятия"
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/Event200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    
+    patch:
+      tags:
+        - events
+      summary: "Patch event"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: number
+          description: "Id мероприятия"
+          required: true
+      requestBody:
+        $ref: "#/components/requestBodies/EventCreateBody"
+      responses:
+        "200":
+          $ref: "#/components/responses/Event200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    
+    delete:
+      tags:
+        - events
+      summary: "Delete event"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: number
+          description: "Id мероприятия"
+          required: true
+      responses:
+        "204":
+          description: "No Content"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    
+  "/api/events/list-events":
+    get:
+      tags:
+        - events
+        - users
+      summary: "List events of user, where they are owner"
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/EventList200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+  
+  "/api/events/{event_id}/consist":
+    post:
+      tags:
+        - events
+        - users
+      summary: "Action for enter/exit in event"
+      parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: number
+          description: "Id мероприятия"
+          required: true
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: "Ok"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+  
+  "/api/events/{event_id}/finish":
+    patch:
+      tags:
+        - events
+        - users
+      summary: "Action for enter/exit in event"
+      parameters:
+        - name: event_id
+          in: path
+          schema:
+            type: number
+          description: "Id мероприятия"
+          required: true
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/Event200"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserBase:
+      type: object
+      properties:
+        id:
+          type: number
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+
+  requestBodies:
+    TokenPairRequestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      required: true
+
+    TokenRefreshRequestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              refresh:
+                type: string
+      required: true
+
+  responses:
+    UserList200:
+      description: "User list"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/UserBase"
+
+    User200:
+      description: "User info"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserBase"
+
+    TokenObtain200:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              access:
+                type: string
+                description: "access token"
+              refresh:
+                type: string
+                description: "refresh token"
+
+    TokenObtain400:
+      description: "Bad request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "No active account found with the given credentials"
+
+    TokenRefresh200:
+      description: "Success"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              access:
+                type: string
+                description: "access token"
+              refresh:
+                type: string
+                description: "refresh token"
+
+    TokenRefresh400:
+      description: "Bad request"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: "Token is invalid or expired"
+              code:
+                type: string
+                example: "token_not_valid"

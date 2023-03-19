@@ -2,14 +2,15 @@ import pytest
 from django.urls import reverse_lazy
 from rest_framework import status
 
-from apps.events import factories, models
+from apps.events.factories import EventFactory
+from apps.events.models import Event
 
 pytestmark = pytest.mark.django_db
 
 
 def test_create_event(user, api_client) -> None:
     """Test create event."""
-    event = factories.EventFactory.build(owner=user)
+    event = EventFactory.build(owner=user)
     api_client.force_authenticate(user=user)
     response = api_client.post(
         reverse_lazy("api:events-list"),
@@ -24,7 +25,7 @@ def test_create_event(user, api_client) -> None:
         },
     )
     assert response.status_code == status.HTTP_201_CREATED
-    assert models.Event.objects.filter(
+    assert Event.objects.filter(
         name=event.name,
         description=event.description,
         address=event.address,
@@ -38,7 +39,7 @@ def test_create_event(user, api_client) -> None:
 
 def test_update_event_by_owner(user, api_client) -> None:
     """Test update event by owner."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         owner=user,
         is_private=False,
         is_finished=False,
@@ -58,7 +59,7 @@ def test_update_event_by_owner(user, api_client) -> None:
         },
     )
     assert response.status_code == status.HTTP_200_OK
-    assert models.Event.objects.filter(
+    assert Event.objects.filter(
         name=new_name,
         description=event.description,
         address=event.address,
@@ -72,7 +73,7 @@ def test_update_event_by_owner(user, api_client) -> None:
 
 def test_update_event_by_member(user, api_client) -> None:
     """Test update event by member."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         is_private=False,
         is_finished=False,
     )
@@ -96,7 +97,7 @@ def test_update_event_by_member(user, api_client) -> None:
 
 def test_update_event_by_other_user(user, api_client) -> None:
     """Test update event by other user."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         is_private=False,
         is_finished=False,
     )
@@ -119,7 +120,7 @@ def test_update_event_by_other_user(user, api_client) -> None:
 
 def test_delete_event_by_owner(user, api_client) -> None:
     """Test delete event by owner."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         owner=user,
         is_private=False,
         is_finished=False,
@@ -129,7 +130,7 @@ def test_delete_event_by_owner(user, api_client) -> None:
         reverse_lazy("api:events-detail", kwargs={"pk": event.pk}),
     )
     assert response.status_code == status.HTTP_204_NO_CONTENT
-    assert not models.Event.objects.filter(
+    assert not Event.objects.filter(
         name=event.name,
         description=event.description,
         address=event.address,
@@ -143,7 +144,7 @@ def test_delete_event_by_owner(user, api_client) -> None:
 
 def test_delete_event_by_member(user, api_client) -> None:
     """Test delete event by member."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         is_private=False,
         is_finished=False,
     )
@@ -157,7 +158,7 @@ def test_delete_event_by_member(user, api_client) -> None:
 
 def test_delete_event_by_other_user(user, api_client) -> None:
     """Test delete event by other user."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         is_private=False,
         is_finished=False,
     )
@@ -170,13 +171,13 @@ def test_delete_event_by_other_user(user, api_client) -> None:
 
 def test_finish_event_by_owner(user, api_client) -> None:
     """Test finish event by owner."""
-    event = factories.EventFactory.create(owner=user)
+    event = EventFactory.create(owner=user)
     api_client.force_authenticate(user=user)
     response = api_client.patch(
         reverse_lazy("api:events-finish", kwargs={"pk": event.pk}),
     )
     assert response.status_code == status.HTTP_200_OK
-    assert models.Event.objects.filter(
+    assert Event.objects.filter(
         name=event.name,
         description=event.description,
         address=event.address,
@@ -190,7 +191,7 @@ def test_finish_event_by_owner(user, api_client) -> None:
 
 def test_finish_event_by_member(user, api_client) -> None:
     """Test finish event by member."""
-    event = factories.EventFactory.create()
+    event = EventFactory.create()
     event.members.add(user)
     api_client.force_authenticate(user=user)
     response = api_client.patch(
@@ -201,7 +202,7 @@ def test_finish_event_by_member(user, api_client) -> None:
 
 def test_finish_event_by_other_user(user, api_client) -> None:
     """Test finish event by other user."""
-    event = factories.EventFactory.create()
+    event = EventFactory.create()
     api_client.force_authenticate(user=user)
     response = api_client.patch(
         reverse_lazy("api:events-finish", kwargs={"pk": event.pk}),
@@ -211,7 +212,7 @@ def test_finish_event_by_other_user(user, api_client) -> None:
 
 def test_consists_in_public_event(user, api_client) -> None:
     """Test consist in event."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         is_private=False,
         is_finished=False,
     )
@@ -231,7 +232,7 @@ def test_consists_in_public_event(user, api_client) -> None:
 
 def test_consists_in_private_event(user, api_client) -> None:
     """Test consist in private event."""
-    event = factories.EventFactory.create(
+    event = EventFactory.create(
         is_private=True,
         is_finished=False,
     )

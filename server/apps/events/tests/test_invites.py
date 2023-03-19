@@ -254,7 +254,7 @@ def test_finish_event_and_new_invites(user, api_client) -> None:
     response = api_client.patch(
         reverse_lazy("api:events-finish", kwargs={"pk": event.pk}),
     )
-    new_user = factories.UserFactory.create()
+    new_user = UserFactory.create()
     invite = factories.InviteFactory.create(
         event=event,
         user=new_user,

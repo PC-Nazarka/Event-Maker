@@ -15,7 +15,7 @@ class ConnectValidation:
         if not (await EventQueries.check_event_exists(event_id)):
             return "Event doesn't exists"
         consist_user = await EventQueries.check_user_consist_in_event(
-            user,
+            user.id,
             event_id,
         )
         if not consist_user:

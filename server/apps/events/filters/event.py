@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from .. import models
+from apps.events.models import Event
 
 
 class EventsFilter(filters.FilterSet):
@@ -40,7 +40,7 @@ class EventsFilter(filters.FilterSet):
     )
 
     class Meta:
-        model = models.Event
+        model = Event
         fields = (
             "name",
             "description",

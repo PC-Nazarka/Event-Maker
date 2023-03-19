@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from .. import models
+from apps.events.models import Invite
 
 
 class InviteFilter(filters.FilterSet):
@@ -16,7 +16,7 @@ class InviteFilter(filters.FilterSet):
     )
 
     class Meta:
-        model = models.Invite
+        model = Invite
         fields = (
             "is_accepted",
         )

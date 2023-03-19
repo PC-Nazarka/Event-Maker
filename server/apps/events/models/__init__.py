@@ -1,2 +1,7 @@
-from .event import Event  # noqa F401
-from .invite import Invite  # noqa F401
+from .event import Event
+from .invite import Invite
+
+__all__ = (
+    Event,
+    Invite,
+)

@@ -4,14 +4,12 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import BaseModel
 
-from .event import Event
-
 
 class Invite(BaseModel):
     """Model of Invite."""
 
     event = models.ForeignKey(
-        Event,
+        "events.Event",
         on_delete=models.CASCADE,
         verbose_name=_("Event of invite"),
     )

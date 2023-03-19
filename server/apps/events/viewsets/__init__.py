@@ -1,2 +1,7 @@
-from .event import EventViewSet  # noqa F401
-from .invite import InviteViewSet  # noqa F401
+from .event import EventViewSet
+from .invite import InviteViewSet
+
+__all__ = (
+    EventViewSet,
+    InviteViewSet,
+)

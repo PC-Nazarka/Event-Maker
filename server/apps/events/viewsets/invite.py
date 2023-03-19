@@ -2,32 +2,34 @@ from rest_framework import response, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
-from apps.core.views import BaseViewSet
-
-from .. import filters, models, permissions, serializers
+from apps.core.viewsets import BaseViewSet
+from apps.events.filters import InviteFilter, filters
+from apps.events.models import Invite
+from apps.events.permissions import InviteOwner
+from apps.events.serializers import InviteAnswerSerializer, InviteSerializer
 
 
 class InviteViewSet(BaseViewSet):
     """ViewSet for Invite model."""
 
-    serializer_class = serializers.InviteSerializer
-    filter_backends = (filters.filters.DjangoFilterBackend,)
-    filterset_class = filters.InviteFilter
+    serializer_class = InviteSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InviteFilter
     permission_classes = (
         IsAuthenticated,
-        permissions.InviteOwner,
+        InviteOwner,
     )
 
     def get_queryset(self):
         """Overriden for custom get queryset."""
-        return models.Invite.objects.select_related("user").filter(
-            user=self.request.user,
+        return Invite.objects.filter(
+            user_id=self.request.user.id,
         )
 
     @action(methods=("POST",), detail=True, url_path="accept")
     def accept(self, request, pk: int = None) -> response.Response:
         """Action for accept or not accept invite."""
-        serializer = serializers.InviteAnswerSerializer(
+        serializer = InviteAnswerSerializer(
             data=request.data,
             context={"request": request},
         )

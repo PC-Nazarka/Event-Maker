@@ -1,2 +1,8 @@
-from .event import EventsFilter, filters  # noqa F401
-from .invite import InviteFilter  # noqa F401
+from .event import EventsFilter, filters
+from .invite import InviteFilter
+
+__all__ = (
+    EventsFilter,
+    filters,
+    InviteFilter,
+)
